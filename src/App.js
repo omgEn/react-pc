@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import {subRoutes} from './router'
+import {Route,Redirect,Switch} from 'react-router-dom'
+import Admin from './components/admin'
+import MyRoute from './components/myroute'
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+           {sessionStorage.getItem("token")?
+          <Admin>
+              <Switch>
+                {/* switch是为了解决刷新问题 */}
+                {
+                    subRoutes.map((item)=>{
+                      return <MyRoute key={item.path} path={item.path}
+                       component={item.component} roles={item.roles} />
+                    })
+                }
+                {/* 设置默认进入的页面 */}
+                <Redirect from="/home" to="/home/list" exact />
+             </Switch>
+          </Admin>:<Redirect to="/login" />}
+    
     </div>
+   
   );
 }
 
